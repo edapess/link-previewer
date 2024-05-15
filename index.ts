@@ -1,7 +1,7 @@
 import axios from "axios";
 import { load } from "cheerio";
 
-async function linkPreview(url: string) {
+export async function getlinkPreviewData(url: string) {
   axios
     .get(url, {
       headers: {
@@ -68,4 +68,3 @@ async function linkPreview(url: string) {
       throw new Error(error?.message);
     });
 }
-module.exports = linkPreview;
