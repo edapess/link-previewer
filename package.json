@@ -10,5 +10,8 @@
   "description": "Simple node js package for getting meta data from link",
   "main": "index.js",
   "repository": "git@github.com:edapess/link-previewer.git",
-  "license": "MIT"
+  "license": "MIT",
+  "publishConfig": {
+    "@edapess:registry": "https://npm.pkg.github.com"
+  }
 }
