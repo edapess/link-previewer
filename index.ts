@@ -63,7 +63,7 @@ export async function getlinkPreviewData(url: string) {
 
       return data;
     })
-
+    .then((data) => data)
     .catch((error) => {
       throw new Error(error?.message);
     });

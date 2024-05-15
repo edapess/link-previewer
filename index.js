@@ -72,6 +72,7 @@ function getlinkPreviewData(url) {
             };
             return data;
         })
+            .then((data) => data)
             .catch((error) => {
             throw new Error(error === null || error === void 0 ? void 0 : error.message);
         });
