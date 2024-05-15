@@ -17,26 +17,25 @@ const axios_1 = __importDefault(require("axios"));
 const cheerio_1 = require("cheerio");
 function getlinkPreviewData(url) {
     return __awaiter(this, void 0, void 0, function* () {
-        axios_1.default
-            .get(url, {
-            headers: {
-                "user-agent": "google-bot",
-                "Accept-Language": "en-US",
-                "Access-Control-Allow-Origin": "*",
-                Accept: "multipart/form-data",
-                "Content-Type": "text/html",
-            },
-        })
-            .then((result) => result.data.toString())
-            .then((html) => {
+        try {
+            const response = yield axios_1.default.get(url, {
+                headers: {
+                    "user-agent": "google-bot",
+                    "Accept-Language": "en-US",
+                    "Access-Control-Allow-Origin": "*",
+                    Accept: "multipart/form-data",
+                    "Content-Type": "text/html",
+                },
+            });
+            const html = response.data.toString();
             const $ = (0, cheerio_1.load)(html);
             const title = $('meta[property="og:title"]').attr("content") ||
                 $("title").text() ||
                 $('meta[name="title"]').attr("content");
             const description = $('meta[property="og:description"]').attr("content") ||
                 $('meta[name="description"]').attr("content");
-            const url = $('meta[property="og:url"]').attr("content");
-            const site_name = $('meta[property="og:site_name"]').attr("content");
+            const linkUrl = $('meta[property="og:url"]').attr("content");
+            const siteName = $('meta[property="og:site_name"]').attr("content");
             const images = [];
             $('meta[property="og:image"]').each(function (index, element) {
                 const imageSrc = $(this).attr("content");
@@ -62,20 +61,19 @@ function getlinkPreviewData(url) {
                 keywords = metaKeywords.split(",");
             }
             const data = {
-                description: description,
+                description: description || "",
                 keywords: keywords,
                 icon: icon || "",
                 images: images,
-                url: url || "",
+                url: linkUrl || "",
                 title: title || "",
-                siteName: site_name || "",
+                siteName: siteName || "",
             };
             return data;
-        })
-            .then((data) => data)
-            .catch((error) => {
+        }
+        catch (error) {
             throw new Error(error === null || error === void 0 ? void 0 : error.message);
-        });
+        }
     });
 }
 exports.getlinkPreviewData = getlinkPreviewData;
