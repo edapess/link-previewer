@@ -1,4 +1,4 @@
-import axios, { AxiosError } from "axios";
+import axios, { AxiosHeaders } from "axios";
 import { load } from "cheerio";
 
 import {
@@ -25,21 +25,38 @@ import {
 const ICON_LINK_TAGS =
   'link[rel="icon"], link[rel="shortcut icon"], link[rel="apple-touch-icon"]';
 
-export async function getlinkPreviewData(url: string) {
+export async function getlinkPreviewData(
+  url: string,
+  headers?: AxiosHeaders
+): Promise<{
+  url: string;
+  title: string;
+  siteName: string;
+  description: string;
+  mediaType: string;
+  contentType: any;
+  images: string[];
+  favicons: string[];
+  charset: any;
+  keywords: string[];
+}> {
   try {
     const response = await axios.get(url, {
-      headers: {
-        "user-agent": USER_AGENT,
-        "Accept-Language": ACCEPT_LANGUAGE,
-        "Access-Control-Allow-Origin": ACCESS_CONTROL_ALLOW_ORIGIN,
-        Accept: ACCEPT,
-        "Content-Type": CONTENT_TYPE,
-      },
+      headers: headers
+        ? headers
+        : {
+            "user-agent": USER_AGENT,
+            "Accept-Language": ACCEPT_LANGUAGE,
+            "Access-Control-Allow-Origin": ACCESS_CONTROL_ALLOW_ORIGIN,
+            Accept: ACCEPT,
+            "Content-Type": CONTENT_TYPE,
+          },
     });
 
     const html = response.data.toString();
     const $ = load(html);
-    const baseUrl = new URL(url).origin;
+    const parts = url.split("/");
+    const baseUrl = parts[0] + "//" + parts[2];
 
     let tiktokDescription = "";
     let tiktokImage = "";
@@ -134,6 +151,6 @@ export async function getlinkPreviewData(url: string) {
 
     return data;
   } catch (error) {
-    return error;
+    throw error;
   }
 }

@@ -1,0 +1,17 @@
+export declare const USER_AGENT = "google-bot";
+export declare const ACCEPT_LANGUAGE = "en-US";
+export declare const ACCESS_CONTROL_ALLOW_ORIGIN = "*";
+export declare const ACCEPT = "multipart/form-data";
+export declare const CONTENT_TYPE = "text/html";
+export declare const OG_TITLE = "meta[property=\"og:title\"]";
+export declare const TITLE_TAG = "title";
+export declare const META_TITLE = "meta[name=\"title\"]";
+export declare const OG_DESCRIPTION = "meta[property=\"og:description\"]";
+export declare const META_DESCRIPTION = "meta[name=\"description\"]";
+export declare const OG_SITE_NAME = "meta[property=\"og:site_name\"]";
+export declare const OG_IMAGE = "meta[property=\"og:image\"]";
+export declare const OG_IMAGE_URL = "meta[property=\"og:image:url\"]";
+export declare const OG_KEYWORDS = "meta[property=\"og:keywords\"]";
+export declare const META_KEYWORDS = "meta[name=\"keywords\"]";
+export declare const OG_TYPE = "meta[property=\"og:type\"]";
+export declare const TIK_TOK_BASE = "https://www.tiktok.com/oembed?url=";
