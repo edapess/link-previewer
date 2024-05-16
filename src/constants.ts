@@ -17,3 +17,6 @@ export const OG_IMAGE_URL = 'meta[property="og:image:url"]';
 export const OG_KEYWORDS = 'meta[property="og:keywords"]';
 export const META_KEYWORDS = 'meta[name="keywords"]';
 export const OG_TYPE = 'meta[property="og:type"]';
+
+//tik tok base url for scrapping
+export const TIK_TOK_BASE = "https://www.tiktok.com/oembed?url=";
