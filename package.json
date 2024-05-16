@@ -6,7 +6,7 @@
     "node-fetch": "^3.3.2"
   },
   "name": "@edapess/link-previewer",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "description": "Simple node js package for getting meta data from link",
   "main": "index.js",
   "repository": {

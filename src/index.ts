@@ -103,10 +103,3 @@ export async function getlinkPreviewData(url: string) {
     return error;
   }
 }
-
-const getData = async () => {
-  const mydata = await getlinkPreviewData("https://vt.tiktok.com/ZSYewDtr7/");
-
-  console.log("🚀 : mydata:", mydata);
-};
-getData();
