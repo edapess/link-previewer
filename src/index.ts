@@ -15,6 +15,7 @@ export async function getlinkPreviewData(url: string) {
 
     const html = response.data.toString();
     const $ = load(html);
+    const baseUrl = new URL(url).origin;
 
     const title =
       $('meta[property="og:title"]').attr("content") ||
@@ -23,10 +24,10 @@ export async function getlinkPreviewData(url: string) {
     const description =
       $('meta[property="og:description"]').attr("content") ||
       $('meta[name="description"]').attr("content");
-    const linkUrl = $('meta[property="og:url"]').attr("content");
     const siteName = $('meta[property="og:site_name"]').attr("content");
 
     const images: string[] = [];
+
     $('meta[property="og:image"]').each(function (index, element) {
       const imageSrc = $(this).attr("content");
       if (imageSrc) {
@@ -39,9 +40,16 @@ export async function getlinkPreviewData(url: string) {
         images.push(imageUrl);
       }
     });
-    const icon =
-      $('link[rel="icon"]').attr("href") ||
-      $('link[rel="shortcut icon"]').attr("href");
+
+    const favicons: string[] = [];
+    $(
+      'link[rel="icon"], link[rel="shortcut icon"], link[rel="apple-touch-icon"]'
+    ).each(function (index, element) {
+      const iconHref = $(this).attr("href");
+      if (iconHref) {
+        favicons.push(new URL(iconHref, baseUrl).href);
+      }
+    });
 
     let keywords: string[] = [];
     const ogKeywords = $('meta[property="og:keywords"]').attr("content");
@@ -52,14 +60,26 @@ export async function getlinkPreviewData(url: string) {
       keywords = metaKeywords.split(",");
     }
 
+    // Get media type and content type
+    const mediaType = $('meta[property="og:type"]').attr("content");
+    const contentType = response.headers["content-type"];
+
+    // Get charset
+    const charset = response.headers["content-type"]
+      ? response.headers["content-type"].split("charset=")[1]
+      : "";
+
     const data = {
-      description: description || "",
-      keywords: keywords,
-      icon: icon || "",
-      images: images,
-      url: linkUrl || "",
+      url,
       title: title || "",
       siteName: siteName || "",
+      description: description || "",
+      mediaType: mediaType || "",
+      contentType: contentType || "",
+      images: images,
+      favicons: favicons,
+      charset: charset || "",
+      keywords: keywords,
     };
 
     return data;
@@ -67,3 +87,12 @@ export async function getlinkPreviewData(url: string) {
     throw new Error(error?.message);
   }
 }
+
+const getData = async () => {
+  const mydata = await getlinkPreviewData(
+    "https://alpha-links.chalkboard.io/join-board/MTI5/WTRWaVkwMnhVNVBDRHk3ZmMyRzdwMVZKWUJwMg=="
+  );
+
+  console.log("🚀 : mydata:", mydata);
+};
+getData();
