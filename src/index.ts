@@ -1,15 +1,37 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { load } from "cheerio";
+import {
+  ACCEPT_LANGUAGE,
+  ACCESS_CONTROL_ALLOW_ORIGIN,
+  ACCEPT,
+  CONTENT_TYPE,
+  OG_TITLE,
+  TITLE_TAG,
+  META_TITLE,
+  OG_DESCRIPTION,
+  META_DESCRIPTION,
+  OG_SITE_NAME,
+  OG_IMAGE,
+  OG_IMAGE_URL,
+  OG_KEYWORDS,
+  META_KEYWORDS,
+  OG_TYPE,
+  USER_AGENT,
+} from "./constants";
+
+// Constants for link tags related to icons
+const ICON_LINK_TAGS =
+  'link[rel="icon"], link[rel="shortcut icon"], link[rel="apple-touch-icon"]';
 
 export async function getlinkPreviewData(url: string) {
   try {
     const response = await axios.get(url, {
       headers: {
-        "user-agent": "google-bot",
-        "Accept-Language": "en-US",
-        "Access-Control-Allow-Origin": "*",
-        Accept: "multipart/form-data",
-        "Content-Type": "text/html",
+        "user-agent": "BLAH",
+        "Accept-Language": ACCEPT_LANGUAGE,
+        "Access-Control-Allow-Origin": ACCESS_CONTROL_ALLOW_ORIGIN,
+        Accept: ACCEPT,
+        "Content-Type": CONTENT_TYPE,
       },
     });
 
@@ -18,23 +40,21 @@ export async function getlinkPreviewData(url: string) {
     const baseUrl = new URL(url).origin;
 
     const title =
-      $('meta[property="og:title"]').attr("content") ||
-      $("title").text() ||
-      $('meta[name="title"]').attr("content");
+      $(OG_TITLE).attr("content") ||
+      $(TITLE_TAG).text() ||
+      $(META_TITLE).attr("content");
     const description =
-      $('meta[property="og:description"]').attr("content") ||
-      $('meta[name="description"]').attr("content");
-    const siteName = $('meta[property="og:site_name"]').attr("content");
+      $(OG_DESCRIPTION).attr("content") || $(META_DESCRIPTION).attr("content");
+    const siteName = $(OG_SITE_NAME).attr("content");
 
     const images: string[] = [];
-
-    $('meta[property="og:image"]').each(function (index, element) {
+    $(OG_IMAGE).each(function (index, element) {
       const imageSrc = $(this).attr("content");
       if (imageSrc) {
         images.push(imageSrc);
       }
     });
-    $('meta[property="og:image:url"]').each(function (index, element) {
+    $(OG_IMAGE_URL).each(function (index, element) {
       const imageUrl = $(this).attr("content");
       if (imageUrl) {
         images.push(imageUrl);
@@ -42,9 +62,7 @@ export async function getlinkPreviewData(url: string) {
     });
 
     const favicons: string[] = [];
-    $(
-      'link[rel="icon"], link[rel="shortcut icon"], link[rel="apple-touch-icon"]'
-    ).each(function (index, element) {
+    $(ICON_LINK_TAGS).each(function (index, element) {
       const iconHref = $(this).attr("href");
       if (iconHref) {
         favicons.push(new URL(iconHref, baseUrl).href);
@@ -52,8 +70,8 @@ export async function getlinkPreviewData(url: string) {
     });
 
     let keywords: string[] = [];
-    const ogKeywords = $('meta[property="og:keywords"]').attr("content");
-    const metaKeywords = $('meta[name="keywords"]').attr("content");
+    const ogKeywords = $(OG_KEYWORDS).attr("content");
+    const metaKeywords = $(META_KEYWORDS).attr("content");
     if (ogKeywords) {
       keywords = ogKeywords.split(",");
     } else if (metaKeywords) {
@@ -61,13 +79,11 @@ export async function getlinkPreviewData(url: string) {
     }
 
     // Get media type and content type
-    const mediaType = $('meta[property="og:type"]').attr("content");
+    const mediaType = $(OG_TYPE).attr("content");
     const contentType = response.headers["content-type"];
 
     // Get charset
-    const charset = response.headers["content-type"]
-      ? response.headers["content-type"].split("charset=")[1]
-      : "";
+    const charset = contentType ? contentType.split("charset=")[1] : "";
 
     const data = {
       url,
@@ -84,14 +100,12 @@ export async function getlinkPreviewData(url: string) {
 
     return data;
   } catch (error) {
-    throw new Error(error?.message);
+    return error;
   }
 }
 
 const getData = async () => {
-  const mydata = await getlinkPreviewData(
-    "https://alpha-links.chalkboard.io/join-board/MTI5/WTRWaVkwMnhVNVBDRHk3ZmMyRzdwMVZKWUJwMg=="
-  );
+  const mydata = await getlinkPreviewData("https://vt.tiktok.com/ZSYewDtr7/");
 
   console.log("🚀 : mydata:", mydata);
 };
