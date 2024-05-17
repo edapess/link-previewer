@@ -24,7 +24,7 @@ export type LinkPreviewerHeaderType =
   | (RawAxiosRequestHeaders & MethodsHeaders)
   | AxiosHeaders;
 
-async function getlinkPreviewData(
+export async function getlinkPreviewData(
   url: string,
   options?: {
     headers?: LinkPreviewerHeaderType;
