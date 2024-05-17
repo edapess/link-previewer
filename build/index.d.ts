@@ -1,15 +1,5 @@
-import { AxiosHeaders, Method, RawAxiosRequestHeaders } from "axios";
-type MethodsHeaders = Partial<{
-    [Key in Method as Lowercase<Key>]: AxiosHeaders;
-} & {
-    common: AxiosHeaders;
-}>;
-export type LinkPreviewerHeaderType = (RawAxiosRequestHeaders & MethodsHeaders) | AxiosHeaders;
-export declare function getlinkPreviewData(url: string, options?: {
-    headers?: LinkPreviewerHeaderType;
-    noHeaders?: boolean;
-    timeout?: number;
-}): Promise<{
+import { TOptions } from "./MainExtractor";
+export declare const getlinkPreviewData: (url: string, options?: TOptions) => Promise<{
     url: string;
     title: string;
     siteName: string;
@@ -21,4 +11,3 @@ export declare function getlinkPreviewData(url: string, options?: {
     charset: any;
     keywords: string[];
 }>;
-export {};

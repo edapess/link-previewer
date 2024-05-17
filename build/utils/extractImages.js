@@ -5,12 +5,12 @@ var constants_1 = require("../constants");
 function extractImages($) {
     var images = [];
     $(constants_1.OG_IMAGE).each(function () {
-        var src = $(this).attr("content");
+        var src = $(this).attr(constants_1.META_CONTENT);
         if (src)
             images.push(src);
     });
     $(constants_1.OG_IMAGE_URL).each(function () {
-        var src = $(this).attr("content");
+        var src = $(this).attr(constants_1.META_CONTENT);
         if (src)
             images.push(src);
     });

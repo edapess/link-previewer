@@ -1,16 +1,16 @@
 import { CheerioAPI } from "cheerio";
-import { OG_IMAGE, OG_IMAGE_URL } from "../constants";
+import { META_CONTENT, OG_IMAGE, OG_IMAGE_URL } from "../constants";
 
 export function extractImages($: CheerioAPI): string[] {
   const images: string[] = [];
 
   $(OG_IMAGE).each(function () {
-    const src = $(this).attr("content");
+    const src = $(this).attr(META_CONTENT);
     if (src) images.push(src);
   });
 
   $(OG_IMAGE_URL).each(function () {
-    const src = $(this).attr("content");
+    const src = $(this).attr(META_CONTENT);
     if (src) images.push(src);
   });
   if (!images.length) {

@@ -1,10 +1,10 @@
 import { CheerioAPI } from "cheerio";
-import { META_DESCRIPTION, OG_DESCRIPTION } from "../constants";
+import { META_CONTENT, META_DESCRIPTION, OG_DESCRIPTION } from "../constants";
 
 export const extractDescription = ($: CheerioAPI): string => {
   return (
-    $(OG_DESCRIPTION).attr("content") ||
-    $(META_DESCRIPTION).attr("content") ||
+    $(OG_DESCRIPTION).attr(META_CONTENT) ||
+    $(META_DESCRIPTION).attr(META_CONTENT) ||
     ""
   );
 };
