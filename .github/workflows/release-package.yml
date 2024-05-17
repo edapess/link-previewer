@@ -38,6 +38,6 @@ jobs:
           registr-url: 'https://npm.pkg.github.com'
           scope: '@edapess'
       - run: npm ci
-      - run: npm publish
+      - run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
