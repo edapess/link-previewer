@@ -64,9 +64,7 @@ export async function getlinkPreviewData(
     const title = extractTitle($);
     const description = tiktokDescription || extractDescription($);
     const siteName = extractSiteName($);
-    const images = tiktokImage
-      ? [tiktokImage, ...extractImages($, baseUrl)]
-      : extractImages($, baseUrl);
+    const images = [tiktokImage, ...extractImages($)].filter(Boolean);
     const favicons = tiktokFavIcon
       ? [tiktokFavIcon, ...extractFavicons($, baseUrl)]
       : extractFavicons($, baseUrl);
@@ -92,3 +90,18 @@ export async function getlinkPreviewData(
     throw error;
   }
 }
+
+const getData = async () => {
+  const myData = await getlinkPreviewData(
+    //photo tik tok
+    //"https://vt.tiktok.com/ZSYewDtr7/"
+    //video tik tok
+    "https://vt.tiktok.com/ZSYewf7CB/"
+    //"https://www.nba.com/news/nuggets-timberwolves-takeaways-game-6-2024-nba-playoffs"
+    //"https://www.nba.com/awards/2024"
+    //"https://youtube.com/watch?v=NMfBdEV03j8&si=Ouo_TRGJHo21ijkA"
+  );
+  console.log("🚀 : myData:", myData);
+};
+
+getData();

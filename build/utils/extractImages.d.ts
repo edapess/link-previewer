@@ -1,2 +1,2 @@
 import { CheerioAPI } from "cheerio";
-export declare function extractImages($: CheerioAPI, baseUrl: string): string[];
+export declare function extractImages($: CheerioAPI): string[];

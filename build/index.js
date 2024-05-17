@@ -78,8 +78,7 @@ function getlinkPreviewData(url, options) {
                     title = (0, utils_1.extractTitle)($);
                     description = tiktokDescription || (0, utils_1.extractDescription)($);
                     siteName = (0, utils_1.extractSiteName)($);
-                    images = tiktokImage
-                        ? __spreadArray([tiktokImage], (0, utils_1.extractImages)($, baseUrl), true) : (0, utils_1.extractImages)($, baseUrl);
+                    images = __spreadArray([tiktokImage], (0, utils_1.extractImages)($), true).filter(Boolean);
                     favicons = tiktokFavIcon
                         ? __spreadArray([tiktokFavIcon], (0, utils_1.extractFavicons)($, baseUrl), true) : (0, utils_1.extractFavicons)($, baseUrl);
                     keywords = (0, utils_1.extractKeywords)($);
@@ -107,3 +106,24 @@ function getlinkPreviewData(url, options) {
     });
 }
 exports.getlinkPreviewData = getlinkPreviewData;
+var getData = function () { return __awaiter(void 0, void 0, void 0, function () {
+    var myData;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, getlinkPreviewData(
+                //photo tik tok
+                //"https://vt.tiktok.com/ZSYewDtr7/"
+                //video tik tok
+                "https://vt.tiktok.com/ZSYewf7CB/"
+                //"https://www.nba.com/news/nuggets-timberwolves-takeaways-game-6-2024-nba-playoffs"
+                //"https://www.nba.com/awards/2024"
+                //"https://youtube.com/watch?v=NMfBdEV03j8&si=Ouo_TRGJHo21ijkA"
+                )];
+            case 1:
+                myData = _a.sent();
+                console.log("🚀 : myData:", myData);
+                return [2 /*return*/];
+        }
+    });
+}); };
+getData();
