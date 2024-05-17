@@ -35,127 +35,73 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
+var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
+        }
+    }
+    return to.concat(ar || Array.prototype.slice.call(from));
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getlinkPreviewData = void 0;
-var axios_1 = __importDefault(require("axios"));
 var cheerio_1 = require("cheerio");
-var constants_1 = require("./constants");
-// Constants for link tags related to icons
-var ICON_LINK_TAGS = 'link[rel="icon"], link[rel="shortcut icon"], link[rel="apple-touch-icon"]';
-function getlinkPreviewData(url, headers) {
+var utils_1 = require("./utils");
+function getlinkPreviewData(url, options) {
     return __awaiter(this, void 0, void 0, function () {
-        var response, html, $_1, parts, baseUrl_1, tiktokDescription, tiktokImage, tiktokMediaType, tiktokFavIcon, appContext, json, key, tdata, tikTokoembedLink, tiktokData, title, description, siteName, images_1, favicons_1, keywords, ogKeywords, metaKeywords, mediaType, contentType, charset, data, error_1;
-        var _a;
-        return __generator(this, function (_b) {
-            switch (_b.label) {
+        var html, $, baseUrl, tiktokDescription, tiktokImage, tiktokMediaType, tiktokFavIcon, tiktokData, title, description, siteName, images, favicons, keywords, mediaType, contentType, charset, error_1;
+        var _a, _b;
+        return __generator(this, function (_c) {
+            switch (_c.label) {
                 case 0:
-                    _b.trys.push([0, 5, , 6]);
-                    return [4 /*yield*/, axios_1.default.get(url, {
-                            headers: headers
-                                ? headers
-                                : {
-                                    "user-agent": constants_1.USER_AGENT,
-                                    "Accept-Language": constants_1.ACCEPT_LANGUAGE,
-                                    "Access-Control-Allow-Origin": constants_1.ACCESS_CONTROL_ALLOW_ORIGIN,
-                                    Accept: constants_1.ACCEPT,
-                                    "Content-Type": constants_1.CONTENT_TYPE,
-                                },
-                        })];
+                    _c.trys.push([0, 4, , 5]);
+                    return [4 /*yield*/, (0, utils_1.fetchHTML)(url, options)];
                 case 1:
-                    response = _b.sent();
-                    html = response.data.toString();
-                    $_1 = (0, cheerio_1.load)(html);
-                    parts = url.split("/");
-                    baseUrl_1 = parts[0] + "//" + parts[2];
+                    html = _c.sent();
+                    $ = (0, cheerio_1.load)(html);
+                    baseUrl = (0, utils_1.extractBaseUrl)(url);
                     tiktokDescription = "";
                     tiktokImage = "";
                     tiktokMediaType = "";
                     tiktokFavIcon = "";
-                    if (!baseUrl_1.includes("tiktok.com")) return [3 /*break*/, 4];
-                    appContext = $_1("#__UNIVERSAL_DATA_FOR_REHYDRATION__").text();
-                    json = JSON.parse(appContext);
-                    key = Object.keys(json)[0];
-                    tdata = json[key];
-                    tikTokoembedLink = tdata["seo.abtest"].canonical;
-                    tiktokFavIcon =
-                        "https://pbs.twimg.com/profile_images/1478853185129238530/S4frAsl-_400x400.jpg";
-                    if (!tikTokoembedLink.includes("/video/")) return [3 /*break*/, 3];
-                    return [4 /*yield*/, axios_1.default.get("".concat(constants_1.TIK_TOK_BASE).concat(tikTokoembedLink))];
+                    if (!baseUrl.includes("tiktok.com")) return [3 /*break*/, 3];
+                    return [4 /*yield*/, (0, utils_1.fetchTikTokData)($)];
                 case 2:
-                    tiktokData = _b.sent();
-                    tiktokDescription = (_a = tiktokData === null || tiktokData === void 0 ? void 0 : tiktokData.data) === null || _a === void 0 ? void 0 : _a.title;
-                    tiktokImage = tiktokData.data.thumbnail_url;
-                    tiktokMediaType = tiktokData.data.type;
-                    return [3 /*break*/, 4];
+                    tiktokData = _c.sent();
+                    tiktokDescription = tiktokData.description;
+                    tiktokImage = tiktokData.image;
+                    tiktokMediaType = tiktokData.mediaType;
+                    tiktokFavIcon = tiktokData.favIcon;
+                    _c.label = 3;
                 case 3:
-                    tiktokImage = tiktokFavIcon;
-                    _b.label = 4;
-                case 4:
-                    title = $_1(constants_1.OG_TITLE).attr("content") ||
-                        $_1(constants_1.TITLE_TAG).text() ||
-                        $_1(constants_1.META_TITLE).attr("content");
-                    description = $_1(constants_1.OG_DESCRIPTION).attr("content") || $_1(constants_1.META_DESCRIPTION).attr("content");
-                    siteName = $_1(constants_1.OG_SITE_NAME).attr("content");
-                    images_1 = [];
-                    if (tiktokImage) {
-                        images_1.push(tiktokImage);
-                    }
-                    $_1(constants_1.OG_IMAGE).each(function (index, element) {
-                        var imageSrc = $_1(this).attr("content");
-                        if (imageSrc) {
-                            images_1.push(imageSrc);
-                        }
-                    });
-                    $_1(constants_1.OG_IMAGE_URL).each(function (index, element) {
-                        var imageUrl = $_1(this).attr("content");
-                        if (imageUrl) {
-                            images_1.push(imageUrl);
-                        }
-                    });
-                    favicons_1 = [];
-                    if (tiktokFavIcon) {
-                        favicons_1.push(tiktokFavIcon);
-                    }
-                    $_1(ICON_LINK_TAGS).each(function (index, element) {
-                        var iconHref = $_1(this).attr("href");
-                        if (iconHref) {
-                            favicons_1.push(new URL(iconHref, baseUrl_1).href);
-                        }
-                    });
-                    keywords = [];
-                    ogKeywords = $_1(constants_1.OG_KEYWORDS).attr("content");
-                    metaKeywords = $_1(constants_1.META_KEYWORDS).attr("content");
-                    if (ogKeywords) {
-                        keywords = ogKeywords.split(",");
-                    }
-                    else if (metaKeywords) {
-                        keywords = metaKeywords.split(",");
-                    }
-                    mediaType = tiktokMediaType !== null && tiktokMediaType !== void 0 ? tiktokMediaType : $_1(constants_1.OG_TYPE).attr("content");
-                    contentType = response.headers["content-type"];
+                    title = (0, utils_1.extractTitle)($);
+                    description = tiktokDescription || (0, utils_1.extractDescription)($);
+                    siteName = (0, utils_1.extractSiteName)($);
+                    images = tiktokImage
+                        ? __spreadArray([tiktokImage], (0, utils_1.extractImages)($, baseUrl), true) : (0, utils_1.extractImages)($, baseUrl);
+                    favicons = tiktokFavIcon
+                        ? __spreadArray([tiktokFavIcon], (0, utils_1.extractFavicons)($, baseUrl), true) : (0, utils_1.extractFavicons)($, baseUrl);
+                    keywords = (0, utils_1.extractKeywords)($);
+                    mediaType = tiktokMediaType || (0, utils_1.extractMediaType)($);
+                    contentType = ((_b = (_a = options === null || options === void 0 ? void 0 : options.headers) === null || _a === void 0 ? void 0 : _a.common) === null || _b === void 0 ? void 0 : _b["Content-Type"]) || "";
                     charset = contentType ? contentType.split("charset=")[1] : "";
-                    data = {
-                        url: url,
-                        title: title || "",
-                        siteName: siteName || "",
-                        description: tiktokDescription || description || "",
-                        mediaType: mediaType || "",
-                        contentType: contentType || "",
-                        images: images_1,
-                        favicons: favicons_1,
-                        charset: charset || "",
-                        keywords: keywords,
-                    };
-                    return [2 /*return*/, data];
-                case 5:
-                    error_1 = _b.sent();
+                    return [2 /*return*/, {
+                            url: url,
+                            title: title,
+                            siteName: siteName,
+                            description: description,
+                            mediaType: mediaType,
+                            contentType: contentType,
+                            images: images,
+                            favicons: favicons,
+                            charset: charset,
+                            keywords: keywords,
+                        }];
+                case 4:
+                    error_1 = _c.sent();
                     throw error_1;
-                case 6: return [2 /*return*/];
+                case 5: return [2 /*return*/];
             }
         });
     });
 }
-exports.getlinkPreviewData = getlinkPreviewData;

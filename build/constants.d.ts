@@ -14,4 +14,5 @@ export declare const OG_IMAGE_URL = "meta[property=\"og:image:url\"]";
 export declare const OG_KEYWORDS = "meta[property=\"og:keywords\"]";
 export declare const META_KEYWORDS = "meta[name=\"keywords\"]";
 export declare const OG_TYPE = "meta[property=\"og:type\"]";
+export declare const ICON_LINK_TAGS = "link[rel=\"icon\"], link[rel=\"shortcut icon\"], link[rel=\"apple-touch-icon\"]";
 export declare const TIK_TOK_BASE = "https://www.tiktok.com/oembed?url=";

@@ -18,5 +18,8 @@ export const OG_KEYWORDS = 'meta[property="og:keywords"]';
 export const META_KEYWORDS = 'meta[name="keywords"]';
 export const OG_TYPE = 'meta[property="og:type"]';
 
+export const ICON_LINK_TAGS =
+  'link[rel="icon"], link[rel="shortcut icon"], link[rel="apple-touch-icon"]';
+
 //tik tok base url for scrapping
 export const TIK_TOK_BASE = "https://www.tiktok.com/oembed?url=";
