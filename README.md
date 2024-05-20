@@ -18,16 +18,16 @@ or
 yarn add @edapess/link-previewer
 ```
 # Usage
-To use the link-previewer, import the getlinkPreviewData function and call it with the URL you want to preview. You can also pass optional headers and timeout settings.
+To use the link-previewer, import the getLinkPreviewData function and call it with the URL you want to preview. You can also pass optional headers and timeout settings.
 
 # Example
 
 ```javascript
-import { getlinkPreviewData } from '@edapess/link-previewer';
+import { getLinkPreviewData } from '@edapess/link-previewer';
 
 const fetchPreviewData = async (url) => {
   try {
-    const data = await getlinkPreviewData(url, {
+    const data = await getLinkPreviewData(url, {
       headers: {
         'user-agent': 'your-user-agent',
         'Accept-Language': 'en-US,en;q=0.9',
@@ -44,7 +44,7 @@ const fetchPreviewData = async (url) => {
 fetchPreviewData('https://example.com');
 ```
 # Response Format
-The ```getlinkPreviewData``` function returns a promise that resolves to an object containing the following properties:
+The ```getLinkPreviewData``` function returns a promise that resolves to an object containing the following properties:
 
 - `url`: The URL of the page.
 - `title`: The title of the page.
@@ -72,7 +72,7 @@ The ```getlinkPreviewData``` function returns a promise that resolves to an obje
 }
 ```
 # Options
-The `getlinkPreviewData` function accepts an options object with the following properties:
+The `getLinkPreviewData` function accepts an options object with the following properties:
 
 - `headers`: Custom headers to use when making the request. Default headers include user-agent, Accept-Language, Access-Control-Allow-Origin, and Accept.
 - `noHeaders`: If set to true, no headers will be sent with the request. Defaults to false.
