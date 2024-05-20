@@ -1,5 +1,6 @@
 import axios from "axios";
-import { LinkPreviewerHeaderType } from "..";
+import { LinkPreviewerHeaderType } from "../MainExtractor";
+
 import {
   USER_AGENT,
   ACCEPT_LANGUAGE,

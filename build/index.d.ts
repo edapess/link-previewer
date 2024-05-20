@@ -1,5 +1,5 @@
 import { TOptions } from "./MainExtractor";
-export declare const getlinkPreviewData: (url: string, options?: TOptions) => Promise<{
+export declare const getLinkPreviewData: (url: string, options?: TOptions) => Promise<{
     url: string;
     title: string;
     siteName: string;

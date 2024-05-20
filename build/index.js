@@ -39,9 +39,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getlinkPreviewData = void 0;
+exports.getLinkPreviewData = void 0;
 var MainExtractor_1 = __importDefault(require("./MainExtractor"));
-var getlinkPreviewData = function (url, options) { return __awaiter(void 0, void 0, void 0, function () {
+var getLinkPreviewData = function (url, options) { return __awaiter(void 0, void 0, void 0, function () {
     var extractor, previewData;
     return __generator(this, function (_a) {
         switch (_a.label) {
@@ -54,4 +54,4 @@ var getlinkPreviewData = function (url, options) { return __awaiter(void 0, void
         }
     });
 }); };
-exports.getlinkPreviewData = getlinkPreviewData;
+exports.getLinkPreviewData = getLinkPreviewData;
