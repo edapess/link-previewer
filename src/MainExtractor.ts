@@ -22,6 +22,8 @@ import {
 } from "./constants";
 
 import axios, { AxiosHeaders, Method, RawAxiosRequestHeaders } from "axios";
+import axiosRetry from "axios-retry";
+import { axiosInstance } from "./axiosInstance";
 
 type MethodsHeaders = Partial<
   {
@@ -114,18 +116,15 @@ export default class MainExtractor {
   }
   protected fetchHTML = async (): Promise<string> => {
     try {
+      axiosRetry(axios, { retries: 3 });
+
       const { headers, noHeaders, timeout } = this.options || {};
-      const response = await axios.get(this.url, {
-        headers: noHeaders
-          ? {}
-          : headers ?? {
-              "user-agent": USER_AGENT,
-              "Accept-Language": ACCEPT_LANGUAGE,
-              "Access-Control-Allow-Origin": ACCESS_CONTROL_ALLOW_ORIGIN,
-              Accept: ACCEPT,
-              "Content-Type": CONTENT_TYPE,
-            },
-        timeout: timeout ?? 3000,
+      const response = await axiosInstance.get(this.url, {
+        ...(!noHeaders &&
+          headers && {
+            headers: headers,
+          }),
+        ...(timeout && { timeout: timeout }),
       });
       return response.data.toString();
     } catch (error) {
@@ -207,12 +206,22 @@ export default class MainExtractor {
       "#__UNIVERSAL_DATA_FOR_REHYDRATION__"
     ).text();
     const json = JSON.parse(appContext);
+    const { headers, noHeaders, timeout } = this.options || {};
     const key = Object.keys(json)[0];
     const tdata = json[key];
     const tikTokoembedLink = tdata["seo.abtest"].canonical;
 
     if (tikTokoembedLink.includes("/video/")) {
-      const tiktokData = await axios.get(`${TIK_TOK_BASE}${tikTokoembedLink}`);
+      const tiktokData = await axiosInstance.get(
+        `${TIK_TOK_BASE}${tikTokoembedLink}`,
+        {
+          ...(!noHeaders &&
+            headers && {
+              headers: headers,
+            }),
+          ...(timeout && { timeout: timeout }),
+        }
+      );
       description = tiktokData?.data?.title;
       image = tiktokData.data.thumbnail_url;
       mediaType = tiktokData.data.type;

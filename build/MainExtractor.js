@@ -1,4 +1,15 @@
 "use strict";
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -51,6 +62,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var cheerio_1 = require("cheerio");
 var constants_1 = require("./constants");
 var axios_1 = __importDefault(require("axios"));
+var axios_retry_1 = __importDefault(require("axios-retry"));
+var axiosInstance_1 = require("./axiosInstance");
 var MainExtractor = /** @class */ (function () {
     function MainExtractor(url, options) {
         var _this = this;
@@ -60,19 +73,12 @@ var MainExtractor = /** @class */ (function () {
                 switch (_b.label) {
                     case 0:
                         _b.trys.push([0, 2, , 3]);
+                        (0, axios_retry_1.default)(axios_1.default, { retries: 3 });
                         _a = this.options || {}, headers = _a.headers, noHeaders = _a.noHeaders, timeout = _a.timeout;
-                        return [4 /*yield*/, axios_1.default.get(this.url, {
-                                headers: noHeaders
-                                    ? {}
-                                    : headers !== null && headers !== void 0 ? headers : {
-                                        "user-agent": constants_1.USER_AGENT,
-                                        "Accept-Language": constants_1.ACCEPT_LANGUAGE,
-                                        "Access-Control-Allow-Origin": constants_1.ACCESS_CONTROL_ALLOW_ORIGIN,
-                                        Accept: constants_1.ACCEPT,
-                                        "Content-Type": constants_1.CONTENT_TYPE,
-                                    },
-                                timeout: timeout !== null && timeout !== void 0 ? timeout : 3000,
-                            })];
+                        return [4 /*yield*/, axiosInstance_1.axiosInstance.get(this.url, __assign(__assign({}, (!noHeaders &&
+                                headers && {
+                                headers: headers,
+                            })), (timeout && { timeout: timeout })))];
                     case 1:
                         response = _b.sent();
                         return [2 /*return*/, response.data.toString()];
@@ -211,31 +217,35 @@ var MainExtractor = /** @class */ (function () {
     };
     MainExtractor.prototype.fetchTikTokData = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var description, image, mediaType, favIcon, appContext, json, key, tdata, tikTokoembedLink, tiktokData;
-            var _a;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
+            var description, image, mediaType, favIcon, appContext, json, _a, headers, noHeaders, timeout, key, tdata, tikTokoembedLink, tiktokData;
+            var _b;
+            return __generator(this, function (_c) {
+                switch (_c.label) {
                     case 0:
                         description = "";
                         image = "";
                         mediaType = "";
-                        favIcon = "https://pbs.twimg.com/profile_images/1478853185129238530/S4frAsl-_400x400.jpg";
+                        favIcon = "https://github.com/edapess/link-previewer/blob/master/src/assets/tiktokpreview.jpeg";
                         appContext = this.cheerioApi("#__UNIVERSAL_DATA_FOR_REHYDRATION__").text();
                         json = JSON.parse(appContext);
+                        _a = this.options || {}, headers = _a.headers, noHeaders = _a.noHeaders, timeout = _a.timeout;
                         key = Object.keys(json)[0];
                         tdata = json[key];
                         tikTokoembedLink = tdata["seo.abtest"].canonical;
                         if (!tikTokoembedLink.includes("/video/")) return [3 /*break*/, 2];
-                        return [4 /*yield*/, axios_1.default.get("".concat(constants_1.TIK_TOK_BASE).concat(tikTokoembedLink))];
+                        return [4 /*yield*/, axiosInstance_1.axiosInstance.get("".concat(constants_1.TIK_TOK_BASE).concat(tikTokoembedLink), __assign(__assign({}, (!noHeaders &&
+                                headers && {
+                                headers: headers,
+                            })), (timeout && { timeout: timeout })))];
                     case 1:
-                        tiktokData = _b.sent();
-                        description = (_a = tiktokData === null || tiktokData === void 0 ? void 0 : tiktokData.data) === null || _a === void 0 ? void 0 : _a.title;
+                        tiktokData = _c.sent();
+                        description = (_b = tiktokData === null || tiktokData === void 0 ? void 0 : tiktokData.data) === null || _b === void 0 ? void 0 : _b.title;
                         image = tiktokData.data.thumbnail_url;
                         mediaType = tiktokData.data.type;
                         return [3 /*break*/, 3];
                     case 2:
                         image = favIcon;
-                        _b.label = 3;
+                        _c.label = 3;
                     case 3: return [2 /*return*/, { description: description, image: image, mediaType: mediaType, favIcon: favIcon }];
                 }
             });
