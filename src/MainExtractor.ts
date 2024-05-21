@@ -201,7 +201,7 @@ export default class MainExtractor {
     let image = "";
     let mediaType = "";
     const favIcon =
-      "https://pbs.twimg.com/profile_images/1478853185129238530/S4frAsl-_400x400.jpg";
+      "https://github.com/edapess/link-previewer/blob/master/src/assets/tiktokpreview.jpeg";
 
     const appContext = this.cheerioApi(
       "#__UNIVERSAL_DATA_FOR_REHYDRATION__"
