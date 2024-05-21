@@ -21,8 +21,7 @@ import {
   USER_AGENT,
 } from "./constants";
 
-import axios, { AxiosHeaders, Method, RawAxiosRequestHeaders } from "axios";
-import axiosRetry from "axios-retry";
+import { AxiosHeaders, Method, RawAxiosRequestHeaders } from "axios";
 import { axiosInstance } from "./axiosInstance";
 
 type MethodsHeaders = Partial<
@@ -37,7 +36,6 @@ export type LinkPreviewerHeaderType =
 
 export type TOptions = {
   headers?: LinkPreviewerHeaderType;
-  noHeaders?: boolean;
   timeout?: number;
 };
 
@@ -116,15 +114,16 @@ export default class MainExtractor {
   }
   protected fetchHTML = async (): Promise<string> => {
     try {
-      axiosRetry(axios, { retries: 3 });
-
-      const { headers, noHeaders, timeout } = this.options || {};
+      const { headers, timeout } = this.options || {};
       const response = await axiosInstance.get(this.url, {
-        ...(!noHeaders &&
-          headers && {
-            headers: headers,
-          }),
-        ...(timeout && { timeout: timeout }),
+        headers: headers ?? {
+          "user-agent": USER_AGENT,
+          "Accept-Language": ACCEPT_LANGUAGE,
+          "Access-Control-Allow-Origin": ACCESS_CONTROL_ALLOW_ORIGIN,
+          Accept: ACCEPT,
+          "Content-Type": CONTENT_TYPE,
+        },
+        timeout: timeout ?? 3000,
       });
       return response.data.toString();
     } catch (error) {
@@ -206,20 +205,24 @@ export default class MainExtractor {
       "#__UNIVERSAL_DATA_FOR_REHYDRATION__"
     ).text();
     const json = JSON.parse(appContext);
-    const { headers, noHeaders, timeout } = this.options || {};
     const key = Object.keys(json)[0];
     const tdata = json[key];
     const tikTokoembedLink = tdata["seo.abtest"].canonical;
 
     if (tikTokoembedLink.includes("/video/")) {
+      const { headers, timeout } = this.options || {};
       const tiktokData = await axiosInstance.get(
         `${TIK_TOK_BASE}${tikTokoembedLink}`,
+
         {
-          ...(!noHeaders &&
-            headers && {
-              headers: headers,
-            }),
-          ...(timeout && { timeout: timeout }),
+          headers: headers ?? {
+            "user-agent": USER_AGENT,
+            "Accept-Language": ACCEPT_LANGUAGE,
+            "Access-Control-Allow-Origin": ACCESS_CONTROL_ALLOW_ORIGIN,
+            Accept: ACCEPT,
+            "Content-Type": CONTENT_TYPE,
+          },
+          timeout: timeout ?? 3000,
         }
       );
       description = tiktokData?.data?.title;

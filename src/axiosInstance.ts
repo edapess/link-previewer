@@ -19,4 +19,10 @@ export const axiosInstance = axios.create({
   timeout: 3000,
 });
 
-axiosRetry(axiosInstance, { retries: 3 });
+axiosRetry(axiosInstance, {
+  retries: 3,
+  retryDelay: (retryCount) => {
+    console.log(`Retry attempt: ${retryCount}`);
+    return axiosRetry.exponentialDelay(retryCount);
+  },
+});

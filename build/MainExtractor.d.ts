@@ -7,7 +7,6 @@ type MethodsHeaders = Partial<{
 export type LinkPreviewerHeaderType = (RawAxiosRequestHeaders & MethodsHeaders) | AxiosHeaders;
 export type TOptions = {
     headers?: LinkPreviewerHeaderType;
-    noHeaders?: boolean;
     timeout?: number;
 };
 export default class MainExtractor {

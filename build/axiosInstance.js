@@ -17,4 +17,10 @@ exports.axiosInstance = axios_1.default.create({
     },
     timeout: 3000,
 });
-(0, axios_retry_1.default)(exports.axiosInstance, { retries: 3 });
+(0, axios_retry_1.default)(exports.axiosInstance, {
+    retries: 3,
+    retryDelay: function (retryCount) {
+        console.log("Retry attempt: ".concat(retryCount));
+        return axios_retry_1.default.exponentialDelay(retryCount);
+    },
+});
