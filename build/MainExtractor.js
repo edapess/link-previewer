@@ -48,16 +48,26 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var cheerio_1 = require("cheerio");
 var constants_1 = require("./constants");
 var axiosInstance_1 = require("./axiosInstance");
+var delay = function (ms) { return new Promise(function (resolve) { return setTimeout(resolve, ms); }); };
 var MainExtractor = /** @class */ (function () {
     function MainExtractor(url, options) {
         var _this = this;
         this.fetchHTML = function () { return __awaiter(_this, void 0, void 0, function () {
-            var _a, headers, timeout, response, error_1;
+            var _a, headers, timeout, maxRetries, retryDelay, attempt, response, error_1;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        _b.trys.push([0, 2, , 3]);
                         _a = this.options || {}, headers = _a.headers, timeout = _a.timeout;
+                        maxRetries = 3;
+                        retryDelay = 1000;
+                        attempt = 0;
+                        _b.label = 1;
+                    case 1:
+                        if (!(attempt < maxRetries)) return [3 /*break*/, 7];
+                        _b.label = 2;
+                    case 2:
+                        _b.trys.push([2, 4, , 6]);
+                        attempt++;
                         return [4 /*yield*/, axiosInstance_1.axiosInstance.get(this.url, {
                                 headers: headers !== null && headers !== void 0 ? headers : {
                                     "user-agent": constants_1.USER_AGENT,
@@ -68,13 +78,21 @@ var MainExtractor = /** @class */ (function () {
                                 },
                                 timeout: timeout !== null && timeout !== void 0 ? timeout : 3000,
                             })];
-                    case 1:
+                    case 3:
                         response = _b.sent();
+                        console.log("🚀 : attempt:", attempt);
                         return [2 /*return*/, response.data.toString()];
-                    case 2:
+                    case 4:
                         error_1 = _b.sent();
-                        throw error_1;
-                    case 3: return [2 /*return*/];
+                        if (attempt >= maxRetries) {
+                            throw error_1;
+                        }
+                        return [4 /*yield*/, delay(retryDelay)];
+                    case 5:
+                        _b.sent();
+                        return [3 /*break*/, 6];
+                    case 6: return [3 /*break*/, 1];
+                    case 7: return [2 /*return*/];
                 }
             });
         }); };
@@ -114,7 +132,9 @@ var MainExtractor = /** @class */ (function () {
                         return [4 /*yield*/, this.fetchHTML()];
                     case 1:
                         html = _d.sent();
-                        this.cheerioApi = (0, cheerio_1.load)(html);
+                        if (html) {
+                            this.cheerioApi = (0, cheerio_1.load)(html);
+                        }
                         baseUrl = this.getBaseUrl();
                         tiktokDescription = "";
                         tiktokImage = "";

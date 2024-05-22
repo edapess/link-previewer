@@ -6,7 +6,6 @@ import {
   CONTENT_TYPE,
   USER_AGENT,
 } from "./constants";
-import axiosRetry from "axios-retry";
 
 export const axiosInstance = axios.create({
   headers: {
@@ -17,12 +16,4 @@ export const axiosInstance = axios.create({
     "Content-Type": CONTENT_TYPE,
   },
   timeout: 3000,
-});
-
-axiosRetry(axiosInstance, {
-  retries: 3,
-  retryDelay: (retryCount) => {
-    console.log(`Retry attempt: ${retryCount}`);
-    return axiosRetry.exponentialDelay(retryCount);
-  },
 });

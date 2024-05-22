@@ -23,22 +23,9 @@ import {
 
 import { AxiosHeaders, Method, RawAxiosRequestHeaders } from "axios";
 import { axiosInstance } from "./axiosInstance";
+import { TOptions } from "./types/types";
 
-type MethodsHeaders = Partial<
-  {
-    [Key in Method as Lowercase<Key>]: AxiosHeaders;
-  } & { common: AxiosHeaders }
->;
-
-export type LinkPreviewerHeaderType =
-  | (RawAxiosRequestHeaders & MethodsHeaders)
-  | AxiosHeaders;
-
-export type TOptions = {
-  headers?: LinkPreviewerHeaderType;
-  timeout?: number;
-};
-
+const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 export default class MainExtractor {
   private cheerioApi: CheerioAPI;
   private url: string;
@@ -68,7 +55,9 @@ export default class MainExtractor {
   }> {
     try {
       const html = await this.fetchHTML();
-      this.cheerioApi = load(html);
+      if (html) {
+        this.cheerioApi = load(html);
+      }
       const baseUrl = this.getBaseUrl();
 
       let tiktokDescription = "";
@@ -112,22 +101,34 @@ export default class MainExtractor {
       throw error;
     }
   }
-  protected fetchHTML = async (): Promise<string> => {
-    try {
-      const { headers, timeout } = this.options || {};
-      const response = await axiosInstance.get(this.url, {
-        headers: headers ?? {
-          "user-agent": USER_AGENT,
-          "Accept-Language": ACCEPT_LANGUAGE,
-          "Access-Control-Allow-Origin": ACCESS_CONTROL_ALLOW_ORIGIN,
-          Accept: ACCEPT,
-          "Content-Type": CONTENT_TYPE,
-        },
-        timeout: timeout ?? 3000,
-      });
-      return response.data.toString();
-    } catch (error) {
-      throw error;
+
+  protected fetchHTML = async (): Promise<string | undefined> => {
+    const { headers, timeout } = this.options || {};
+    const maxRetries = 3;
+    const retryDelay = 1000; // 1 second delay between retries
+    let attempt = 0;
+
+    while (attempt < maxRetries) {
+      try {
+        attempt++;
+        let response = await axiosInstance.get(this.url, {
+          headers: headers ?? {
+            "user-agent": USER_AGENT,
+            "Accept-Language": ACCEPT_LANGUAGE,
+            "Access-Control-Allow-Origin": ACCESS_CONTROL_ALLOW_ORIGIN,
+            Accept: ACCEPT,
+            "Content-Type": CONTENT_TYPE,
+          },
+          timeout: timeout ?? 3000,
+        });
+        console.log("🚀 : attempt:", attempt);
+        return response.data.toString();
+      } catch (error) {
+        if (attempt >= maxRetries) {
+          throw error;
+        }
+        await delay(retryDelay);
+      }
     }
   };
 

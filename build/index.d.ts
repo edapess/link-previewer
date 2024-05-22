@@ -1,4 +1,4 @@
-import { TOptions } from "./MainExtractor";
+import { TOptions } from "./types/types";
 export declare const getLinkPreviewData: (url: string, options?: TOptions) => Promise<{
     url: string;
     title: string;

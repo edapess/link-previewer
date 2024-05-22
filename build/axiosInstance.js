@@ -6,7 +6,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.axiosInstance = void 0;
 var axios_1 = __importDefault(require("axios"));
 var constants_1 = require("./constants");
-var axios_retry_1 = __importDefault(require("axios-retry"));
 exports.axiosInstance = axios_1.default.create({
     headers: {
         "user-agent": constants_1.USER_AGENT,
@@ -16,11 +15,4 @@ exports.axiosInstance = axios_1.default.create({
         "Content-Type": constants_1.CONTENT_TYPE,
     },
     timeout: 3000,
-});
-(0, axios_retry_1.default)(exports.axiosInstance, {
-    retries: 3,
-    retryDelay: function (retryCount) {
-        console.log("Retry attempt: ".concat(retryCount));
-        return axios_retry_1.default.exponentialDelay(retryCount);
-    },
 });

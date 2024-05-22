@@ -1,14 +1,4 @@
-import { AxiosHeaders, Method, RawAxiosRequestHeaders } from "axios";
-type MethodsHeaders = Partial<{
-    [Key in Method as Lowercase<Key>]: AxiosHeaders;
-} & {
-    common: AxiosHeaders;
-}>;
-export type LinkPreviewerHeaderType = (RawAxiosRequestHeaders & MethodsHeaders) | AxiosHeaders;
-export type TOptions = {
-    headers?: LinkPreviewerHeaderType;
-    timeout?: number;
-};
+import { TOptions } from "./types/types";
 export default class MainExtractor {
     private cheerioApi;
     private url;
@@ -27,7 +17,7 @@ export default class MainExtractor {
         charset: any;
         keywords: string[];
     }>;
-    protected fetchHTML: () => Promise<string>;
+    protected fetchHTML: () => Promise<string | undefined>;
     protected getDescription: () => string;
     protected getFavicons(): string[];
     protected getImages(): string[];
@@ -42,4 +32,3 @@ export default class MainExtractor {
     }>;
     protected getTitle: () => string;
 }
-export {};

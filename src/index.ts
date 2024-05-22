@@ -1,4 +1,5 @@
-import MainExtractor, { TOptions } from "./MainExtractor";
+import MainExtractor from "./MainExtractor";
+import { TOptions } from "./types/types";
 
 export const getLinkPreviewData = async (url: string, options?: TOptions) => {
   const extractor = new MainExtractor(url, options);
