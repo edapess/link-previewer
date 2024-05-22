@@ -80,7 +80,6 @@ var MainExtractor = /** @class */ (function () {
                             })];
                     case 3:
                         response = _b.sent();
-                        console.log("🚀 : attempt:", attempt);
                         return [2 /*return*/, response.data.toString()];
                     case 4:
                         error_1 = _b.sent();

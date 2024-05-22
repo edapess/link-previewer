@@ -121,7 +121,6 @@ export default class MainExtractor {
           },
           timeout: timeout ?? 3000,
         });
-        console.log("🚀 : attempt:", attempt);
         return response.data.toString();
       } catch (error) {
         if (attempt >= maxRetries) {
