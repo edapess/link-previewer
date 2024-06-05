@@ -1,5 +1,4 @@
 import axios from "axios";
-import { LinkPreviewerHeaderType } from "../MainExtractor";
 
 import {
   USER_AGENT,
@@ -8,6 +7,7 @@ import {
   ACCEPT,
   CONTENT_TYPE,
 } from "../constants";
+import { LinkPreviewerHeaderType } from "../types/types";
 
 export const fetchHTML = async (
   url: string,

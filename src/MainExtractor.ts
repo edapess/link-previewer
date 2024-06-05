@@ -21,7 +21,6 @@ import {
   USER_AGENT,
 } from "./constants";
 
-import { AxiosHeaders, Method, RawAxiosRequestHeaders } from "axios";
 import { axiosInstance } from "./axiosInstance";
 import { TOptions } from "./types/types";
 
